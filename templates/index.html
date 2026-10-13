@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Corporate &amp; event catering · Gauteng</p>
+    <h1>Food that keeps your event on schedule and your guests talking.</h1>
+    <p class="lead">Boardroom lunches, product launches, conferences and year-end functions for companies across Gauteng. Tell us the date and headcount — we'll send a quote within one working day.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#enquire">Request a quote</a>
+      <a class="btn btn-ghost" href="#menus">Browse menus</a>
+    </div>
+  </div>
+  <dl class="hero-stats">
+    {% for label, value in site.facts %}
+<div><dt>{{ label }}</dt><dd data-count="{{ value }}">{{ value }}</dd></div>   {% endfor %}
+  </dl>
+</section>
+
+<!-- ============================ EVENTS ============================ -->
+<section class="section" id="work" aria-labelledby="work-h">
+<header class="section-head reveal">
+      <p class="eyebrow">Recent work</p>
+    <h2 id="work-h">Events we've catered</h2>
+    <p>A selection of corporate work. Filter by the kind of event you're planning.</p>
+  </header>
+
+  <div class="filters" role="group" aria-label="Filter events">
+    <button class="chip is-active" data-filter="all" aria-pressed="true">All</button>
+    <button class="chip" data-filter="conference" aria-pressed="false">Conferences</button>
+    <button class="chip" data-filter="launch" aria-pressed="false">Launches</button>
+    <button class="chip" data-filter="gala" aria-pressed="false">Galas</button>
+    <button class="chip" data-filter="boardroom" aria-pressed="false">Boardroom</button>
+  </div>
+
+  <div class="work-grid reveal-stagger">
+    {% for ev in events %}
+    <article class="work{% if loop.first %} featured{% endif %}" data-type="{{ ev.type }}">
+      <div class="photo" style="--a:{{ ev.color_a }};--b:{{ ev.color_b }}">
+        {% if ev.image %}
+        <img src="{{ url_for('static', filename='images/' ~ ev.image) }}" alt="{{ ev.image_alt }}" loading="lazy">
+        {% else %}
+        <span class="photo-tag">Add photo</span>
+        {% endif %}
+      </div>
+      <div class="work-body">
+        <p class="meta">{{ ev.meta }}</p>
+        <h3>{{ ev.title }}</h3>
+        <p>{{ ev.blurb }}</p>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ============================ MENUS ============================ -->
+<section class="section tinted" id="menus" aria-labelledby="menus-h">
+<header class="section-head reveal">
+      <p class="eyebrow">Menus</p>
+    <h2 id="menus-h">Starting points for a quote</h2>
+    <p>Every menu can be adjusted for dietary needs, budget and venue.</p>
+  </header>
+
+  <div class="menu-split">
+    <nav class="menu-nav" aria-label="Menu types">
+      {% for m in menus %}
+      <button class="menu-nav-item{% if loop.first %} is-active{% endif %}"
+              data-menu="{{ m.slug }}"
+              aria-selected="{{ 'true' if loop.first else 'false' }}">
+        <span class="menu-nav-title">{{ m.title }}</span>
+        <span class="menu-nav-price">{{ m.price }}</span>
+      </button>
+      {% endfor %}
+      <p class="legend">
+        <i class="tag">V</i> vegetarian <i class="tag">VG</i> vegan
+        <i class="tag">GF</i> gluten-free <i class="tag">H</i> halaal available
+      </p>
+    </nav>
+
+    <div class="menu-panel">
+      {% for m in menus %}
+      <div class="menu-panel-inner{% if not loop.first %} is-hidden{% endif %}" data-panel="{{ m.slug }}">
+        <header class="menu-panel-head">
+          <h3>{{ m.title }}</h3>
+          <p class="price">{{ m.price }}</p>
+        </header>
+        <div class="courses">
+          {% for course in m.courses %}
+          <div class="course">
+            <h4>{{ course.name }}</h4>
+            <ul>
+              {% for item in course['items'] %}
+              <li>
+                <span>{{ item.text }}</span>
+                {% for tag in item.tags %}<i class="tag">{{ tag }}</i>{% endfor %}
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PROCESS ============================ -->
+<section class="section" id="how" aria-labelledby="how-h">
+<header class="section-head reveal">
+      <p class="eyebrow">Process</p>
+    <h2 id="how-h">How it works</h2>
+    <p>From first message to cleared tables.</p>
+  </header>
+<ol class="timeline">
+    {% for step in steps %}
+    <li>
+      <h3>{{ step.title }}</h3>
+      <p>{{ step.body }}</p>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<!-- ============================ ENQUIRY ============================ -->
+<section class="section section-dark" id="enquire" aria-labelledby="enq-h">
+  <div class="enquire-grid">
+    <div class="enquire-intro reveal">
+      <p class="eyebrow">Get in touch</p>
+      <h2 id="enq-h">Corporate enquiry</h2>
+      <p>Fill in what you know. We'll reply with questions or a quote within one working day.</p>
+      <ul class="contact">
+        <li><strong>Call</strong> <a href="tel:{{ site.phone_href }}">{{ site.phone }}</a></li>
+        <li><strong>Email</strong> <a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+        <li><strong>WhatsApp</strong> <a href="https://wa.me/{{ site.whatsapp_href }}">{{ site.whatsapp }}</a></li>
+      </ul>
+    </div>
+
+    <form id="enquiryForm" class="form reveal" method="post" action="{{ url_for('create_enquiry') }}" novalidate>
+      <div class="row two">
+        <label>Company<input name="company" required autocomplete="organization"></label>
+        <label>Your name<input name="name" required autocomplete="name"></label>
+      </div>
+      <div class="row two">
+        <label>Work email<input type="email" name="email" required autocomplete="email"></label>
+        <label>Phone<input type="tel" name="phone" required autocomplete="tel"></label>
+      </div>
+      <div class="row two">
+        <label>Event type
+          <select name="eventType" required>
+            <option value="">Choose one</option>
+            <option>Conference or seminar</option>
+            <option>Product launch</option>
+            <option>Gala or year-end function</option>
+            <option>Boardroom or office catering</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Event date<input type="date" name="date" required></label>
+      </div>
+      <div class="row two">
+        <label>Guests<input type="number" name="guests" min="1" max="5000" required inputmode="numeric"></label>
+        <label>Budget per person
+          <select name="budget">
+            <option value="">Not sure yet</option>
+            <option>Under R200</option>
+            <option>R200 to R350</option>
+            <option>R350 to R500</option>
+            <option>R500 and above</option>
+          </select>
+        </label>
+      </div>
+      <label>Venue or area<input name="venue" placeholder="e.g. Sandton, or your own office"></label>
+
+      <fieldset>
+        <legend>Dietary needs</legend>
+        <label class="check"><input type="checkbox" name="diet" value="Halaal"> Halaal</label>
+        <label class="check"><input type="checkbox" name="diet" value="Vegetarian"> Vegetarian</label>
+        <label class="check"><input type="checkbox" name="diet" value="Vegan"> Vegan</label>
+        <label class="check"><input type="checkbox" name="diet" value="Gluten-free"> Gluten-free</label>
+        <label class="check"><input type="checkbox" name="diet" value="Allergies"> Allergies</label>
+      </fieldset>
+
+      <label>Anything else<textarea name="message" rows="4"></textarea></label>
+
+      <div class="hp" aria-hidden="true">
+        <label>Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <p class="error" id="formError" role="alert" hidden></p>
+      <button class="btn btn-primary" type="submit">Send enquiry</button>
+    </form>
+
+    <div class="success" id="formSuccess" hidden tabindex="-1">
+      <h3>Enquiry sent</h3>
+      <p>Thank you. We'll reply within one working day. If your event is within 7 days, please also call us.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

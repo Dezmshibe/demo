@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign in · Enquiries</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+  body{display:grid;place-items:center;min-height:100vh;background:var(--tint)}
+  .login{width:min(400px,92vw);background:var(--white);border:1px solid var(--line);
+         border-radius:var(--radius);padding:2rem;box-shadow:0 20px 40px -24px rgba(23,48,43,.35)}
+  .login h1{font-size:1.6rem;margin-bottom:.3em}
+  .login p.sub{color:var(--ink-2);margin-bottom:1.4rem;font-size:.95rem}
+  .login label{display:grid;gap:.35rem;font-weight:600;font-size:.95rem;margin-bottom:1rem}
+  .login button{width:100%;margin-top:.5rem}
+  .login .error{background:#FDECEA;border:1px solid var(--chilli);color:var(--chilli);
+                padding:.6rem .8rem;border-radius:8px;font-size:.9rem;margin-bottom:1rem}
+  .login .back{display:block;text-align:center;margin-top:1.2rem;font-size:.9rem;color:var(--ink-2)}
+</style>
+</head>
+<body>
+<form class="login" method="post" action="{{ url_for('login', next=request.args.get('next', '')) }}">
+  <h1>Enquiries</h1>
+  <p class="sub">Sign in to view submissions.</p>
+
+  {% if error %}
+  <p class="error" role="alert">{{ error }}</p>
+  {% endif %}
+
+  <label>Username
+    <input name="username" autocomplete="username" autofocus required>
+  </label>
+  <label>Password
+    <input type="password" name="password" autocomplete="current-password" required>
+  </label>
+
+  <button class="btn btn-primary" type="submit">Sign in</button>
+  <a class="back" href="{{ url_for('home') }}">← Back to site</a>
+</form>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "files.associations": {
+    "**/templates/*.html": "django-html",
+    "**/templates/*.jinja": "django-html",
+    "**/templates/*.j2": "django-html"
+  },
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
+  "html.validate.scripts": false,
+  "html.validate.styles": false,
+  "[django-html]": {
+    "editor.tabSize": 2,
+    "editor.formatOnSave": false
+  }
+}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enquiries</title>
+<style>
+  body{font:15px/1.5 system-ui,sans-serif;margin:0;color:#17302B;background:#F4F6F1}
+  .topbar{background:#17302B;color:#E6EDE5;padding:.9rem 2rem;display:flex;
+          justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+  .topbar strong{font-weight:600}
+  .topbar a{color:#E6EDE5;text-decoration:none;padding:.35rem .9rem;
+            border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:.9rem}
+  .topbar a:hover{background:rgba(255,255,255,.12)}
+  main{padding:2rem}
+  h1{font-size:1.6rem;margin:.2em 0 1rem}
+  table{border-collapse:collapse;width:100%;background:#fff}
+  th,td{border:1px solid #C9D4C9;padding:.5rem .7rem;text-align:left;vertical-align:top}
+  th{background:#E6EDE5}
+  a.btn{display:inline-block;margin:.5rem 0 1rem;padding:.5rem 1rem;background:#17302B;
+        color:#fff;border-radius:999px;text-decoration:none}
+  .wrap{overflow-x:auto}
+  .empty{padding:2rem;background:#fff;border:1px solid #C9D4C9;border-radius:8px;color:#2B4A43}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <strong>Marula Table · Enquiries</strong>
+  <a href="{{ url_for('logout') }}">Sign out</a>
+</div>
+<main>
+<h1>Enquiries ({{ rows|length }})</h1>
+<a class="btn" href="{{ url_for('export_csv') }}">Download CSV</a>
+<div class="wrap">
+  <table>
+    <tr><th>#</th><th>Received</th><th>Contact</th><th>Event</th><th>Details</th><th>Message</th><th>Status</th></tr>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r['id'] }}</td>
+      <td>{{ r['created_at'] }}</td>
+      <td><b>{{ r['company'] }}</b><br>{{ r['name'] }}<br>
+        <a href="mailto:{{ r['email'] }}">{{ r['email'] }}</a><br>{{ r['phone'] }}</td>
+      <td>{{ r['event_type'] }}<br>{{ r['event_date'] }}<br>{{ r['guests'] }} guests</td>
+      <td>{{ r['budget'] or '-' }}<br>{{ r['venue'] or '-' }}<br>{{ r['diet'] or '-' }}</td>
+      <td>{{ r['message'] or '' }}</td>
+      <td>{{ r['status'] }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="empty">No enquiries yet.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+</main>
+</body>
+</html>
